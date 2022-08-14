@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 
 error Staking__TransferFailed();
 error Staking__NeedsMoreThanZero();
@@ -29,7 +29,7 @@ contract Staking is ReentrancyGuard {
     }
 
     modifier moreThanZero(uint256 amount) {
-        if(amount == 0) {
+        if (amount == 0) {
             revert Staking__NeedsMoreThanZero();
         }
         _;
@@ -56,7 +56,7 @@ contract Staking is ReentrancyGuard {
         return s_rewardPerTokenStored + (((block.timestamp - s_lastUpdateTime) * REWARD_RATE * 1e18) / s_totalSupply);
     }
 
-    function stake(uint256 amount) updateReward(msg.sender) moreThanZero(amount) nonReentrant external {
+    function stake(uint256 amount) external updateReward(msg.sender) moreThanZero(amount) nonReentrant {
         s_balances[msg.sender] = s_balances[msg.sender] + amount;
         s_totalSupply = s_totalSupply + amount;
         bool success = s_stakingToken.transferFrom(msg.sender, address(this), amount);
@@ -65,7 +65,7 @@ contract Staking is ReentrancyGuard {
         }
     }
 
-    function withdraw(uint256 amount) updateReward(msg.sender) moreThanZero(amount) nonReentrant external {
+    function withdraw(uint256 amount) external updateReward(msg.sender) moreThanZero(amount) nonReentrant {
         s_balances[msg.sender] = s_balances[msg.sender] - amount;
         s_totalSupply = s_totalSupply - amount;
         bool success = s_stakingToken.transfer(msg.sender, amount);
@@ -74,8 +74,9 @@ contract Staking is ReentrancyGuard {
         }
     }
 
-    function claimReward() updateReward(msg.sender) nonReentrant external {
+    function claimReward() external updateReward(msg.sender) nonReentrant {
         uint256 reward = s_rewards[msg.sender];
+        s_rewards[msg.sender] = 0;
         bool success = s_rewardToken.transfer(msg.sender, reward);
         if (!success) {
             revert Staking__TransferFailed();
