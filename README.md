@@ -34,7 +34,7 @@ To verify the contract
 npx hardhat run ./scripts/verify/Staking.sol
 ```
 
-Deployed lottery contract address on BSC Testnet
+Deployed staking contract address on Goerli network
 ```shell
 STAKING_ADDRESS=0x6CA216Eeb2b178De5B2D53A803a3D813E6165416
 TEST_TOKEN_ADDRESS=0x1F33Df997970214D0c562cFC21159207ed4aa629
