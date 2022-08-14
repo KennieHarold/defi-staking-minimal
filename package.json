@@ -1,6 +1,9 @@
 {
   "name": "hardhat-project",
   "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "start": "cd frontend && npm run start",
+    "build": "cd frontend && npm run build",
     "format": "prettier --write contracts/**/*.sol"
   },
   "devDependencies": {
